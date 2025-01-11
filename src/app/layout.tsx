@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Manrope } from 'next/font/google';
+import { ClerkProvider } from '@clerk/nextjs';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
 	title: 'Opal',
 	description: 'Share AI powered videos with your friends.',
 };
+const manrope = Manrope({
+	subsets: ['latin'],
+	variable: '--font-manrope',
+});
 
 export default function RootLayout({
 	children,
@@ -12,11 +19,19 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{children}
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang='en'>
+				<body className={`${manrope.variable} bg-[#171717]`}>
+					{' '}
+					<ThemeProvider
+						attribute='class'
+						defaultTheme='system'
+						enableSystem
+						disableTransitionOnChange>
+						{children}
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }
