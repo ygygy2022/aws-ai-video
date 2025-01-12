@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Manrope } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 
 export const metadata: Metadata = {
 	title: 'Opal',
@@ -25,8 +25,7 @@ export default function RootLayout({
 					{' '}
 					<ThemeProvider
 						attribute='class'
-						defaultTheme='system'
-						enableSystem
+						defaultTheme='dark'
 						disableTransitionOnChange>
 						{children}
 					</ThemeProvider>
