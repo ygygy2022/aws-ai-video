@@ -1,24 +1,33 @@
-import { Menu } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 type Props = {};
 
 const LandingPageNavBar = (props: Props) => {
 	return (
 		<div className='flex w-full justify-between items-center'>
 			<div className='text-3xl font-semibold flex items-center gap-x-3'>
-				<Menu className='w-6 h-6' />
+				<Menu className='w-8 h-8' />
 				<Image src='/next.svg' alt='logo' width={40} height={40} />
 				Opal
 			</div>
 			<div className='hidden gap-x-10 items-center lg:flex'>
-				<Link href='/'>Home</Link>
-				<Link href='/'>Features</Link>
+				<Link
+					href='/'
+					className='bg-[#7320DD] py-2 px-5 font-semibold text-lg rounded-full hover:bg-[#7320DD]/80'>
+					Home
+				</Link>
 				<Link href='/'>Pricing</Link>
 				<Link href='/'>Contact</Link>
+				<Link href='/auth/sign-in' className='text-base flex gap-x-2'>
+					<Button>
+						<User className='w-4 h-4' />
+						Login
+					</Button>
+				</Link>
 			</div>
-			LandingPage
 		</div>
 	);
 };
