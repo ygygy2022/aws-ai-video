@@ -2,14 +2,14 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { client } from '@/lib/prisma';
 
-export const verifyAccessToWorkspace = async (workspaceId: string) => {
+export const verifyAccessToWorkspace = async (workSpaceId: string) => {
   try {
     const user = await currentUser();
     if (!user) return { status: 403 };
 
     const isUserInWorkspace = await client.workspace.findUnique({
       where: {
-        id: workspaceId,
+        id: workSpaceId,
         OR: [
           { User: { clerkid: user.id } },
           {
@@ -34,10 +34,10 @@ export const verifyAccessToWorkspace = async (workspaceId: string) => {
   }
 };
 
-export const getWorkspaceFolders = async (workspaceId: string) => {
+export const getWorkspaceFolders = async (workSpaceId: string) => {
   try {
     const isFolders = await client.folder.findMany({
-      where: { workspaceId },
+      where: { workSpaceId },
       include: {
         _count: {
           select: {
@@ -52,5 +52,47 @@ export const getWorkspaceFolders = async (workspaceId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return { status: 403, data: [] };
+  }
+};
+
+export const getAllUserVideos = async (workSpaceId: string) => {
+  try {
+    const user = await currentUser();
+    if (!user) return { status: 404 };
+    const videos = await client.video.findMany({
+      where: {
+        OR: [
+          { workSpaceId },
+          {
+            folderId: workSpaceId,
+          },
+        ],
+        select: {
+          id: true,
+          title: true,
+          createdAt: true,
+          source: true,
+          processing: true,
+          Folder: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          User: {
+            select: {
+              lastName: true,
+              firstName: true,
+              clerkid: true,
+            },
+          },
+        },
+      },
+    });
+    if (videos && videos.length > 0) return { status: 200, data: videos };
+    return { status: 404 };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { status: 400 };
   }
 };
