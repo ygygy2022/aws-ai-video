@@ -25,10 +25,32 @@ export const verifyAccessToWorkspace = async (workspaceId: string) => {
       },
     });
     return { status: 200, data: { workspace: isUserInWorkspace } };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return {
       status: 403,
       data: { workspace: null },
     };
+  }
+};
+
+export const getWorkspaceFolders = async (workspaceId: string) => {
+  try {
+    const isFolders = await client.folder.findMany({
+      where: { workspaceId },
+      include: {
+        _count: {
+          select: {
+            videos: true,
+          },
+        },
+      },
+    });
+    if (isFolders && isFolders.length > 0)
+      return { status: 200, data: isFolders };
+    return { status: 404, data: [] };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { status: 403, data: [] };
   }
 };
