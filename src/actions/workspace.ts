@@ -96,3 +96,46 @@ export const getAllUserVideos = async (workSpaceId: string) => {
     return { status: 400 };
   }
 };
+
+export const getWorkSpace = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) return { status: 404 };
+    const workSpace = await client.WorkSpace.findMany({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        subscription: {
+          select: {
+            plan: true,
+          },
+        },
+        workspace: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          },
+        },
+        members: {
+          select: {
+            WorkSpace: {
+              select: {
+                id: true,
+                name: true,
+                type: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (workSpace && workSpace.length > 0)
+      return { status: 200, data: workSpace };
+    return { status: 404 };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { status: 400 };
+  }
+};
