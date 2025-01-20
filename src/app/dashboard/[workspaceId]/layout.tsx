@@ -1,7 +1,15 @@
 import { onAuthenticationUser } from '@/actions/user';
 import { verifyAccessToWorkspace } from '@/actions/workspace';
 import { redirect } from 'next/navigation';
-import { QueryClient } from '@tanstack/react-query';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+import { getNotifications } from '@/actions/user';
+import { getWorkspaceFolders } from '@/actions/workspace';
+import { getAllUserVideos } from '@/actions/workspace';
+import { getWorkSpaces } from '@/actions/workspace';
 import React from 'react';
 type Props = {
   params: {
@@ -28,13 +36,17 @@ const Layout = async ({ children, params: { workspaceId } }: Props) => {
   });
   await query.prefetchQuery({
     queryKey: ['user-workspaces'],
-    queryFn: () => getAllUserWorkspaces(),
+    queryFn: () => getWorkSpaces(),
   });
   await query.prefetchQuery({
     queryKey: ['user-notifications'],
     queryFn: () => getNotifications(),
   });
-  return <div>{children}</div>;
+  return (
+    <HydrationBoundary state={dehydrate(query)}>
+      <div>{children}</div>
+    </HydrationBoundary>
+  );
 };
 
 export default Layout;
