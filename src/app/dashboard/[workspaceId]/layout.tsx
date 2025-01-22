@@ -11,6 +11,7 @@ import { getWorkspaceFolders } from '@/actions/workspace';
 import { getAllUserVideos } from '@/actions/workspace';
 import { getWorkSpaces } from '@/actions/workspace';
 import React from 'react';
+import { Sidebar } from '@/components/global/sidebar';
 type Props = {
   params: {
     workspaceId: string;
@@ -46,6 +47,7 @@ const Layout = async ({ children, params: { workspaceId } }: Props) => {
     <HydrationBoundary state={dehydrate(query)}>
       <div className="flex h-screen w-screen">
         <Sidebar actionWorkspaceId={workspaceId} />
+        {children}
       </div>
     </HydrationBoundary>
   );

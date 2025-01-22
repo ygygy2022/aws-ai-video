@@ -1,6 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { onAuthenticationUser } from '@/actions/user';
+import WorkspacePage from './[workspaceId]/page';
 
 type Props = {};
 
