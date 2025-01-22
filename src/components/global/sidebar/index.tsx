@@ -12,12 +12,20 @@ import {
 } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
+import { useUserQueryData } from '@/hooks/userQueryData';
+import { getWorkSpaces } from '@/actions/workspace';
+import { WorkspaceProps } from '@/types/index.type';
 type Props = {
-  actionWorkspaceId: string;
+  activeWorkspaceId: string;
 };
 
-export const Sidebar = ({ actionWorkspaceId }: Props) => {
+export const Sidebar = ({ activeWorkspaceId }: Props) => {
   const router = useRouter();
+  const { data, isFetching } = useUserQueryData(
+    ['user-workspaces'],
+    getWorkSpaces
+  );
+  const { data: workspace } = data as WorkspaceProps;
   const onChangeActiveWorkspace = (value: string) => {
     router.push(`/dashboard/${value}`);
   };
@@ -28,7 +36,7 @@ export const Sidebar = ({ actionWorkspaceId }: Props) => {
         <p className="text-2xl">Opal</p>
       </div>
       <Select
-        defaultValue={actionWorkspaceId}
+        defaultValue={activeWorkspaceId}
         onValueChange={(value) => {
           onChangeActiveWorkspace(value);
         }}
@@ -40,6 +48,20 @@ export const Sidebar = ({ actionWorkspaceId }: Props) => {
           <SelectGroup>
             <SelectLabel>Workspace</SelectLabel>
             <Separator />
+            {workspace.workspace.map((workspace) => (
+              <SelectItem key={workspace.id} value={workspace.id}>
+                {workspace.name}
+              </SelectItem>
+            ))}
+            {workspace.members.length > 0 &&
+              workspace.members.map((workspace) => (
+                <SelectItem
+                  key={workspace.WorkSpace.id}
+                  value={workspace.WorkSpace.id}
+                >
+                  {workspace.WorkSpace.name}
+                </SelectItem>
+              ))}
           </SelectGroup>
         </SelectContent>
       </Select>

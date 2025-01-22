@@ -8,7 +8,7 @@ import {
 export const useUserQueryData = (
   queryKey: QueryKey,
   queryFn: QueryFunction,
-  enabled: Enabled
+  enabled?: Enabled
 ) => {
   const { data, isFetching, isPending, isFetched, refetch } = useQuery({
     queryKey,
