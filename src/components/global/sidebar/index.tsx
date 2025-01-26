@@ -12,22 +12,20 @@ import {
 } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
-import { useUserQueryData } from '@/hooks/userQueryData';
+import { useQueryData } from '@/hooks/useQueryData';
 import { getWorkSpaces } from '@/actions/workspace';
 import { WorkspaceProps } from '@/types/index.type';
 import Modal from '../modal';
-import { Span } from 'next/dist/trace';
-import { PlusCircle, PlusIcon } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
+import Search from '../search';
+
 type Props = {
   activeWorkspaceId: string;
 };
 
 export const Sidebar = ({ activeWorkspaceId }: Props) => {
   const router = useRouter();
-  const { data, isFetching } = useUserQueryData(
-    ['user-workspaces'],
-    getWorkSpaces
-  );
+  const { data, isFetching } = useQueryData(['user-workspaces'], getWorkSpaces);
   const { data: workspace } = data as WorkspaceProps;
   const onChangeActiveWorkspace = (value: string) => {
     router.push(`/dashboard/${value}`);
@@ -82,8 +80,9 @@ export const Sidebar = ({ activeWorkspaceId }: Props) => {
         }
         title="Invite to Workspace"
         description="Invite a user to your workspace"
-        WorkspaceSearch
-      ></Modal>
+      >
+        <Search workspaceId={activeWorkspaceId} />
+      </Modal>
     </div>
   );
 };
